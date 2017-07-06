@@ -37,7 +37,7 @@
     <Row>
         <Key android:codes="113" android:keyLabel="q"
              android:popupKeyboard="@xml/popup_keyboard" android:popupCharacters="àáâãäåæ"
-             android:keyEdgeFlags="left"/>
+             android:keyEdgeFlags="left" android:horizontalGap="2dp"/>
         <Key android:codes="115" android:keyLabel="s"/>
         <Key android:codes="100" android:keyLabel="d"/>
         <Key android:codes="102" android:keyLabel="f"/>
