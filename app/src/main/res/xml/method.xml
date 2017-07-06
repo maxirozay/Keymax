@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<input-method xmlns:android="http://schemas.android.com/apk/res/android"
+        android:settingsActivity="com.maxirozay.keymax.SettingsActivity">
+    <subtype
+        android:label="@string/subtype_keymax"
+        android:imeSubtypeLocale="en_US"
+        android:imeSubtypeMode="keyboard"/>
+</input-method>

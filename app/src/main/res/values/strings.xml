@@ -1,0 +1,53 @@
+<resources>
+    <string name="app_name">Keymax</string>
+    <string name="subtype_keymax">keymax</string>
+
+    <!-- Delete word popup -->
+    <string name="remove_word_confirmation">Do you want to remove the word \"%1$s\" from the suggestions?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <!-- Strings related to Settings -->
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_settings">Keymax</string>
+
+    <string name="title_rate">Rate This Keyboard</string>
+    <string name="title_share">Share This Keyboard</string>
+    <string name="title_tips">Tips</string>
+    <string name="tips">- Swipe left to change the keyboard or right to change the language
+        after having selected some other languages in the settings.
+        \n\n- Minimize the keyboard\'s size and scroll it to access the numbers.
+        \n\n- Be patient for the first load of a language.
+        \n\n- Press a suggested word for a few seconds to delete it.</string>
+
+    <string name="title_keyboard_layout">Keyboard Layout</string>
+    <string name="default_keyboard">qwerty</string>
+    <string-array name="listKeyboard">
+        <item>qwerty</item>
+        <item>qwertz</item>
+        <item>azerty</item>
+    </string-array>
+    <string name="key_keyboard_layout">keyboard_type</string>
+    <string name="title_dictionary">Dictionary</string>
+    <string name="title_de">Deutsch</string>
+    <string name="title_en_US">English (US)</string>
+    <string name="title_es">Español</string>
+    <string name="title_fr">Français</string>
+    <string name="title_it">Italiano</string>
+    <string name="title_pt_BR">Português (Brazil)</string>
+    <string name="summary_language">Add this language to the dictionary.</string>
+    <string name="key_english">en_US</string>
+    <string name="key_french">fr</string>
+    <string name="key_spanish">es</string>
+    <string name="key_german">de</string>
+    <string name="key_italian">it</string>
+    <string name="key_portuguese">pt_BR</string>
+    <string name="title_preview">Key preview</string>
+    <string name="summary_preview">Show a popup that displays the key pressed.</string>
+    <string name="key_preview">key_preview</string>
+    <string name="title_auto_correct">Auto Correction</string>
+    <string name="summary_auto_correct">Write the most pertinent word when the space key is pressed.</string>
+    <string name="key_auto_correct">key_auto_correct</string>
+    <string name="title_reset_data">Reset Data</string>
+    <string name="summary_reset_data">This will reset your entire dictionary.</string>
+    <string name="key_reset_data">key_reset</string>
+</resources>

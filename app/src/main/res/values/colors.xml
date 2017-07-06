@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#ff0000</color>
+    <color name="colorPrimaryDark">#333333</color>
+    <color name="colorAccent">#000000</color>
+
+    <color name="key_grey">#cccccccc</color>
+    <color name="key_pressed_gray">#aaaaaaaa</color>
+    <color name="key_stroke_gray">#02000000</color>
+    <color name="key_dark">#444444</color>
+    <color name="key_pressed_dark">#22ffffff</color>
+    <color name="key_stroke_dark">#04ffffff</color>
+    <color name="background_dark">#000000</color>
+    <color name="transparent">#00000000</color>
+</resources>
