@@ -90,7 +90,7 @@ public class InputService extends InputMethodService implements
             case InputType.TYPE_CLASS_DATETIME:
             case InputType.TYPE_CLASS_PHONE:
                 inputType = NUMBERIC;
-                keyboard = new KeymaxKeyboard(this, R.xml.number);
+                keyboard = new KeymaxKeyboard(this, R.xml.numeric);
                 break;
             case InputType.TYPE_CLASS_TEXT:
             default:
