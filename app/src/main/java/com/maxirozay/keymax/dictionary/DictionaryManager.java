@@ -503,20 +503,13 @@ public class DictionaryManager {
                         corrections);
                 if (matchCount > 2) return matchCount;
             }
-        } else if (node.getLowercase().length() == editedQuery.length()) {
-            if (errorCount == 0) {
-                if (node.isWord()) perfectMatches.add(node);
-                else perfectMatches.addAll(node.getSuffixes());
-                return 1;
-            }
-            else {
-                if (node.isWord()) corrections.add(node);
-                else corrections.addAll(node.getSuffixes());
-                return 0;
-            }
         } else {
             if (errorCount == 0) {
-                if (node.isWord()) matches.add(node);
+                if (node.isWord()) {
+                    if (node.getLowercase().length() == editedQuery.length()) {
+                        perfectMatches.add(node);
+                    } else matches.add(node);
+                }
                 else matches.addAll(node.getSuffixes());
                 return 1;
             }
