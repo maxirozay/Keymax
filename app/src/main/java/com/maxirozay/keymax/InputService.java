@@ -248,7 +248,7 @@ public class InputService extends InputMethodService implements
         String[] lastWords = lastCharacters.split("\\s+");
         lastWord = lastWords.length > 1 ? lastWords[lastWords.length - 2] : "";
         currentWord = lastWords.length > 0 ? lastWords[lastWords.length - 1] : "";
-        isNewSentence(lastWords);
+        checkIfIsNewSentence(lastWords);
     }
 
     private void setComposingRegion(int cursorPosition) {
@@ -266,17 +266,15 @@ public class InputService extends InputMethodService implements
         }
     }
 
-    private boolean isNewSentence(String[] lastWords) {
+    private void checkIfIsNewSentence(String[] lastWords) {
         if (lastWords.length == 0) {
             isNewSentence = true;
-            return isNewSentence;
-        }
-        if (currentWordIsDone && StringUtil.isEndOfSentence(lastWords[lastWords.length - 1])) {
+        } else if (currentWordIsDone && StringUtil
+                .isEndOfSentence(lastWords[lastWords.length - 1])) {
             isNewSentence = true;
         } else if (lastWords.length > 1) {
             isNewSentence = StringUtil.isEndOfSentence(lastWords[lastWords.length - 2]);
         } else isNewSentence = !currentWordIsDone;
-        return isNewSentence;
     }
 
     private void getPredictions() {
