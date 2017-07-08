@@ -46,9 +46,9 @@
         <Key android:codes="106" android:keyLabel="j"/>
         <Key android:codes="107" android:keyLabel="k"/>
         <Key android:codes="108" android:keyLabel="l"/>
-        <Key android:codes="39,44,45" android:keyLabel="',-"
+        <Key android:codes="39,44,45" android:keyLabel="\',-"
             android:popupKeyboard="@xml/popup_keyboard"
-            android:popupCharacters="()&quot;&lt;&gt;:;_&amp;"
+            android:popupCharacters="()\&quot;&lt;&gt;:;_&amp;"
             android:keyEdgeFlags="right"/>
     </Row>
     <Row>
@@ -69,7 +69,7 @@
     <Row android:rowEdgeFlags="bottom">
         <Key android:codes="64,35,47" android:keyLabel="\@\#"
             android:popupKeyboard="@xml/popup_keyboard"
-            android:popupCharacters="()&quot;&lt;&gt;:;_&amp;"
+            android:popupCharacters="()\&quot;&lt;&gt;:;_&amp;"
             android:keyWidth="15%p"
             android:keyEdgeFlags="left" />
         <Key android:codes="33" android:keyLabel="!" android:isRepeatable="true"/>

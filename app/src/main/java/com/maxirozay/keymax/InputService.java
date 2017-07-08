@@ -9,8 +9,8 @@ import android.inputmethodservice.Keyboard;
 import android.media.AudioManager;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
-import android.view.ContextThemeWrapper;
 import android.text.InputType;
+import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -206,6 +206,7 @@ public class InputService extends InputMethodService implements
     }
 
     private void initCursorPosition() {
+        if (!(inputType == ALPHABETIC_KEYBOARD && isPredictable)) return;
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return;
         ExtractedText extractedText = ic.getExtractedText(new ExtractedTextRequest(), 0);
@@ -214,6 +215,7 @@ public class InputService extends InputMethodService implements
     }
 
     private void initPredictions() {
+        if (!(inputType == ALPHABETIC_KEYBOARD && isPredictable)) return;
         lastPredictions.clear();
         lastWord = "";
         currentWord = "";
@@ -493,7 +495,11 @@ public class InputService extends InputMethodService implements
         keyboard.setShifted(value);
 
         // Invalidate all alphabetic keys
-        for (int i = 15; i < 38; i++) inputView.getKeyboardView().invalidateKey(i);
+        int offset = 0;
+        if (inputView.getKeyboardView().getKeyboard().getKeys().size() > 40) offset = -10;
+        for (int i = 15 + offset; i < 43 + offset; i++) {
+            inputView.getKeyboardView().invalidateKey(i);
+        }
         invalidatePredication();
     }
 

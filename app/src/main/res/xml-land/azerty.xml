@@ -60,16 +60,16 @@
         <Key android:codes="98" android:keyLabel="b"/>
         <Key android:codes="110" android:keyLabel="n"
              android:popupKeyboard="@xml/popup_keyboard" android:popupCharacters="ñ"/>
-        <Key android:codes="39,44,45" android:keyLabel="',-"
+        <Key android:codes="39,44,45" android:keyLabel="\',-"
              android:popupKeyboard="@xml/popup_keyboard"
-             android:popupCharacters="()&quot;&lt;&gt;:;_&amp;"/>
+             android:popupCharacters="()\&quot;&lt;&gt;:;_&amp;"/>
         <Key android:codes="-5" android:keyIcon="@drawable/ic_keyboard_backspace_red_24dp"
              android:keyWidth="18%p" android:isRepeatable="true" android:keyEdgeFlags="right"/>
     </Row>
     <Row android:rowEdgeFlags="bottom">
         <Key android:codes="64,35,47" android:keyLabel="\@\#"
             android:popupKeyboard="@xml/popup_keyboard"
-            android:popupCharacters="()&quot;&lt;&gt;:;_&amp;"
+            android:popupCharacters="()\&quot;&lt;&gt;:;_&amp;"
             android:keyWidth="15%p"
             android:keyEdgeFlags="left" />
         <Key android:codes="33" android:keyLabel="!" android:isRepeatable="true"/>
