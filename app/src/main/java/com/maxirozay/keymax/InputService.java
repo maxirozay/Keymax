@@ -1,6 +1,5 @@
 package com.maxirozay.keymax;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -434,18 +433,12 @@ public class InputService extends InputMethodService implements
                             getString(R.string.remove_word_confirmation, word),
                             getString(R.string.yes),
                             getString(R.string.no),
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dictionaryManager.removeWord(word);
-                                    dialog.dismiss();
-                                    initPredictions();
-                                }
+                            (dialog, which) -> {
+                                dictionaryManager.removeWord(word);
+                                dialog.dismiss();
+                                initPredictions();
                             },
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            },
+                            (dialog, which) -> dialog.dismiss(),
                             inputView.getWindowToken());
                     break;
             }
