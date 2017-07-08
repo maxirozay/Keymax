@@ -9,7 +9,6 @@ import android.media.AudioManager;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.text.InputType;
-import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.View;
@@ -279,32 +278,34 @@ public class InputService extends InputMethodService implements
     }
 
     private void getPredictions() {
-        if (!(inputType == ALPHABETIC_KEYBOARD && isPredictable)) return;
-        if (currentWordIsDone) lastPredictions = dictionaryManager.getFollowingWords(currentWord);
-        else lastPredictions = dictionaryManager.searchWord(currentWord, lastPredictions);
+        if (inputType == ALPHABETIC_KEYBOARD && isPredictable && dictionaryManager != null) {
+            if (currentWordIsDone)
+                lastPredictions = dictionaryManager.getFollowingWords(currentWord);
+            else lastPredictions = dictionaryManager.searchWord(currentWord, lastPredictions);
 
-        for (int i = 0; i < 4; i++) {
-            if (lastPredictions.size() > i && lastPredictions.get(i).isWord()) {
-                predictions[i] = lastPredictions.get(i).getWord() + " ";
-                addPredictionToDictionary[i] = false;
-            } else {
-                predictions[i] = currentWord + " ";
-                addPredictionToDictionary[i] = true;
+            for (int i = 0; i < 4; i++) {
+                if (lastPredictions.size() > i && lastPredictions.get(i).isWord()) {
+                    predictions[i] = lastPredictions.get(i).getWord() + " ";
+                    addPredictionToDictionary[i] = false;
+                } else {
+                    predictions[i] = currentWord + " ";
+                    addPredictionToDictionary[i] = true;
+                }
             }
-        }
-        checkPredictionsCase();
-        if (!currentWordIsDone) predictions[3] = currentWord + " ";
-        for (int i = 0; i < PREDICTION_KEYS.length; i++) {
-            if (predictions[i].length() < 12) {
-                keyboard.getKeys().get(PREDICTION_KEYS[i]).label = predictions[i];
-            } else {
-                keyboard.getKeys().get(PREDICTION_KEYS[i])
-                        .label = ".." + predictions[i]
-                        .substring(predictions[i].length() - 11, predictions[i].length());
+            checkPredictionsCase();
+            if (!currentWordIsDone) predictions[3] = currentWord + " ";
+            for (int i = 0; i < PREDICTION_KEYS.length; i++) {
+                if (predictions[i].length() < 12) {
+                    keyboard.getKeys().get(PREDICTION_KEYS[i]).label = predictions[i];
+                } else {
+                    keyboard.getKeys().get(PREDICTION_KEYS[i])
+                            .label = ".." + predictions[i]
+                            .substring(predictions[i].length() - 11, predictions[i].length());
+                }
             }
+            invalidatePredication();
+            if (currentWordIsDone) lastPredictions.clear();
         }
-        invalidatePredication();
-        if (currentWordIsDone) lastPredictions.clear();
     }
 
     private void checkPredictionsCase() {
