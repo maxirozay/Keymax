@@ -334,7 +334,7 @@ public class InputService extends InputMethodService implements
         switch(primaryCode) {
             case SPACE_PRIMARY_CODE:
                 currentWordIsDone = true;
-                if (isPredictable && autoCorrect) {
+                if (inputType == ALPHABETIC_KEYBOARD && isPredictable && autoCorrect) {
                     if (addPredictionToDictionary[0]) addToDictionary(predictions[0]);
                     writeWord(predictions[0]);
                 } else {
