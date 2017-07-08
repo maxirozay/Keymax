@@ -30,7 +30,7 @@ public class DictionaryManager {
     private static Map<Character, String> letterNeighbor;
     private Context context;
 
-    public void initLetterNeighborQWERTZ() {
+    private void initLetterNeighborQWERTZ() {
         letterNeighbor = new Hashtable<>();
         letterNeighbor.put('q', "w");
         letterNeighbor.put('w', "eq");
@@ -59,7 +59,7 @@ public class DictionaryManager {
         letterNeighbor.put('n', "bm");
         letterNeighbor.put('m', "n");
     }
-    public void initLetterNeighborQWERTY() {
+    private void initLetterNeighborQWERTY() {
         letterNeighbor = new Hashtable<>();
         letterNeighbor.put('q', "w");
         letterNeighbor.put('w', "eq");
@@ -88,7 +88,7 @@ public class DictionaryManager {
         letterNeighbor.put('n', "bm");
         letterNeighbor.put('m', "n");
     }
-    public void initLetterNeighborAZERTY() {
+    private void initLetterNeighborAZERTY() {
         letterNeighbor = new Hashtable<>();
         letterNeighbor.put('a', "z");
         letterNeighbor.put('z', "ea");
@@ -133,15 +133,12 @@ public class DictionaryManager {
             preferences.edit().putBoolean(context.getString(R.string.key_reset_data), false).apply();
         }
         if (getRoot(realm) == null) {
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    Node root = createNode(realm, "", 0, "");
-                    String[] followingWords = {"I", "do", "can"};
-                    root.setFollowingWords(getFollowingWords(realm,
-                            followingWords,
-                            context.getString(R.string.key_english)));
-                }
+            realm.executeTransaction(realm -> {
+                Node root = createNode(realm, "", 0, "");
+                String[] followingWords = {"I", "do", "can"};
+                root.setFollowingWords(getFollowingWords(realm,
+                        followingWords,
+                        context.getString(R.string.key_english)));
             });
         }
         checkLanguages();
@@ -168,7 +165,7 @@ public class DictionaryManager {
         }
     }
 
-    public void checkLanguages() {
+    private void checkLanguages() {
         String[] languages = {context.getString(R.string.key_french),
                 context.getString(R.string.key_german),
                 context.getString(R.string.key_italian),
@@ -193,39 +190,28 @@ public class DictionaryManager {
     }
 
     private void resetDatabase() {
-        realm.executeTransactionAsync(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                realm.deleteAll();
-            }
-        });
+        realm.executeTransactionAsync(realm -> realm.deleteAll());
     }
 
     private void removeLanguage(final String language) {
-        realm.executeTransactionAsync(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                RealmResults<Node> nodes = realm.where(Node.class)
-                        .contains("language", language).findAll();
-                for (Node node : nodes) {
-                    node.removeLanguage(language);
-                    if (node.getLanguage().isEmpty()) node.setWord(false);
-                }
+        realm.executeTransactionAsync(realm -> {
+            RealmResults<Node> nodes = realm.where(Node.class)
+                    .contains("language", language).findAll();
+            for (Node node : nodes) {
+                node.removeLanguage(language);
+                if (node.getLanguage().isEmpty()) node.setWord(false);
             }
         });
     }
 
     public void removeWord(final String word) {
-        realm.executeTransactionAsync(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                Node node = realm.where(Node.class)
-                        .equalTo("lowercase", word.toLowerCase()).findFirst();
-                if (node != null) {
-                    if (node.getSuffixes().size() == 0) {
-                        node.deleteFromRealm();
-                    } else node.setWord(false);
-                }
+        realm.executeTransactionAsync(realm -> {
+            Node node = realm.where(Node.class)
+                    .equalTo("lowercase", word.toLowerCase()).findFirst();
+            if (node != null) {
+                if (node.getSuffixes().size() == 0) {
+                    node.deleteFromRealm();
+                } else node.setWord(false);
             }
         });
     }
@@ -234,7 +220,7 @@ public class DictionaryManager {
 
         String language;
 
-        public DictionaryLoader(String language) {
+        private DictionaryLoader(String language) {
             this.language = language;
         }
 
@@ -289,19 +275,16 @@ public class DictionaryManager {
     }
 
     private void loadWords(Realm realm, final String[] lines, final String language) {
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                for (String line: lines){
-                    final String[] splittedLine = line.split("\\s+", 3);
-                    final String[] followingWords = splittedLine.length > 2 ?
-                            splittedLine[2].split("\\s+") : null;
-                    addWord(realm,
-                            splittedLine[0],
-                            Integer.parseInt(splittedLine[1]),
-                            getFollowingWords(realm, followingWords, language),
-                            language);
-                }
+        realm.executeTransaction(realm1 -> {
+            for (String line: lines){
+                final String[] splittedLine = line.split("\\s+", 3);
+                final String[] followingWords = splittedLine.length > 2 ?
+                        splittedLine[2].split("\\s+") : null;
+                addWord(realm1,
+                        splittedLine[0],
+                        Integer.parseInt(splittedLine[1]),
+                        getFollowingWords(realm1, followingWords, language),
+                        language);
             }
         });
     }
@@ -560,43 +543,37 @@ public class DictionaryManager {
     }
 
     public void addWord(final String word) {
-        realm.executeTransactionAsync(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                String wordEdited = StringUtil.stripEncapsulatingPunctuation(word);
-                if (!isWordValid(wordEdited)) return;
-                String lowercase = wordEdited.toLowerCase();
-                Node node = realm.where(Node.class).equalTo("lowercase", lowercase).findFirst();
-                if (node == null) {
-                    populateTree(realm,
-                            lowercase,
-                            wordEdited,
-                            0,
-                            null,
-                            "USER");
-                } else {
-                    node.setWord(wordEdited);
-                    node.setWord(true);
-                }
+        realm.executeTransactionAsync(realm -> {
+            String wordEdited = StringUtil.stripEncapsulatingPunctuation(word);
+            if (!isWordValid(wordEdited)) return;
+            String lowercase = wordEdited.toLowerCase();
+            Node node = realm.where(Node.class).equalTo("lowercase", lowercase).findFirst();
+            if (node == null) {
+                populateTree(realm,
+                        lowercase,
+                        wordEdited,
+                        0,
+                        null,
+                        "USER");
+            } else {
+                node.setWord(wordEdited);
+                node.setWord(true);
             }
         });
     }
 
     public void addFollowingWord(final String word, final String following) {
-        realm.executeTransactionAsync(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                String wordEdited = StringUtil.stripEncapsulatingPunctuation(word);
-                String followingEdited = StringUtil.stripEncapsulatingPunctuation(following);
-                if (!isWordValid(wordEdited) || !isWordValid(followingEdited)) return;
-                Node wordNode = realm.where(Node.class)
-                        .equalTo("lowercase", wordEdited.toLowerCase()).findFirst();
-                if (wordNode == null) return;
-                Node followingNode = realm.where(Node.class)
-                        .equalTo("lowercase", followingEdited.toLowerCase()).findFirst();
-                if (followingNode == null) return;
-                wordNode.addFollowingWord(followingNode);
-            }
+        realm.executeTransactionAsync(realm -> {
+            String wordEdited = StringUtil.stripEncapsulatingPunctuation(word);
+            String followingEdited = StringUtil.stripEncapsulatingPunctuation(following);
+            if (!isWordValid(wordEdited) || !isWordValid(followingEdited)) return;
+            Node wordNode = realm.where(Node.class)
+                    .equalTo("lowercase", wordEdited.toLowerCase()).findFirst();
+            if (wordNode == null) return;
+            Node followingNode = realm.where(Node.class)
+                    .equalTo("lowercase", followingEdited.toLowerCase()).findFirst();
+            if (followingNode == null) return;
+            wordNode.addFollowingWord(followingNode);
         });
     }
 
