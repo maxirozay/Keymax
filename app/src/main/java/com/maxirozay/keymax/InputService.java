@@ -9,6 +9,7 @@ import android.media.AudioManager;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.text.InputType;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.View;
@@ -326,7 +327,6 @@ public class InputService extends InputMethodService implements
             inputView.getKeyboardView().invalidateKey(id);
         }
     }
-
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
         playSound(primaryCode);

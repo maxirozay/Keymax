@@ -2,7 +2,6 @@ package com.maxirozay.keymax.dictionary;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.maxirozay.keymax.R;
 import com.maxirozay.keymax.util.StringUtil;
@@ -11,7 +10,6 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -463,11 +461,12 @@ public class DictionaryManager {
         if (prefixes.size() == 0) prefixes.add(getRoot(realm));
         List<Node> perfectMatches = new ArrayList<>();
         List<Node> matches = new ArrayList<>();
+        List<Node> corrections = new ArrayList<>();
         for (Node prefix : prefixes) {
-            searchInTree(query.toLowerCase(), prefix, 0, 0, perfectMatches, matches);
+            searchInTree(query.toLowerCase(), prefix, 0, 0, perfectMatches, matches, corrections);
         }
         perfectMatches.addAll(matches);
-        Collections.sort(perfectMatches,  new WordLengthComparator());
+        perfectMatches.addAll(corrections);
         if (perfectMatches.size() > 0 && !perfectMatches.get(0).isWord()) {
             Node node = perfectMatches.remove(0);
             perfectMatches.addAll(node.getSuffixes());
@@ -480,7 +479,8 @@ public class DictionaryManager {
                              int errorCount,
                              int depth,
                              List<Node> perfectMatches,
-                             List<Node> matches) {
+                             List<Node> matches,
+                             List<Node> corrections) {
         int matchCount = 0;
         String editedQuery = query;
         for (int i = depth; i < node.getLowercase().length(); i++) {
@@ -509,26 +509,38 @@ public class DictionaryManager {
                 } else return 0;
             }
         }
-        if (node.getLowercase().length() >= editedQuery.length()) {
-            if (errorCount == 0) {
-                if (node.isWord()) perfectMatches.add(node);
-                else perfectMatches.addAll(node.getSuffixes());
-                return 1;
-            }
-            else {
-                if (node.isWord()) matches.add(node);
-                else matches.addAll(node.getSuffixes());
-                return 0;
-            }
-        } else {
+        if (node.getLowercase().length() < editedQuery.length()){
             for (Node suffix : node.getSuffixes()) {
                 matchCount += searchInTree(editedQuery,
                         suffix,
                         errorCount,
                         node.getLowercase().length(),
                         perfectMatches,
-                        matches);
+                        matches,
+                        corrections);
                 if (matchCount > 2) return matchCount;
+            }
+        } else if (node.getLowercase().length() == editedQuery.length()) {
+            if (errorCount == 0) {
+                if (node.isWord()) perfectMatches.add(node);
+                else perfectMatches.addAll(node.getSuffixes());
+                return 1;
+            }
+            else {
+                if (node.isWord()) corrections.add(node);
+                else corrections.addAll(node.getSuffixes());
+                return 0;
+            }
+        } else {
+            if (errorCount == 0) {
+                if (node.isWord()) matches.add(node);
+                else matches.addAll(node.getSuffixes());
+                return 1;
+            }
+            else {
+                if (node.isWord()) corrections.add(node);
+                else corrections.addAll(node.getSuffixes());
+                return 0;
             }
         }
         return 0;
