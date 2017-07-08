@@ -230,7 +230,7 @@ public class InputService extends InputMethodService implements
                 char lastCharacter = lastCharacters.charAt(lastCharacters.length() - 1);
                 currentWordIsDone = lastCharacter == ' ' || lastCharacter == '\n';
                 updateCurrentWord(lastCharacters.toString());
-                setComposingRegion(cursorPosition);
+                setComposingRegion();
                 if (isNewSentence && autoUpperCase && currentWordIsDone) enableShift(true);
                 getPredictions();
              }
@@ -251,7 +251,7 @@ public class InputService extends InputMethodService implements
         checkIfIsNewSentence(lastWords);
     }
 
-    private void setComposingRegion(int cursorPosition) {
+    private void setComposingRegion() {
         InputConnection ic = getCurrentInputConnection();
         if (currentWordIsDone) ic.finishComposingText();
         else {
@@ -499,7 +499,9 @@ public class InputService extends InputMethodService implements
         else {
             lastWord = currentWord;
             currentWordIsDone = true;
+            cursorPosition -= currentWord.length();
             currentWord = word.substring(0, word.length() - 1);
+            cursorPosition += word.length();
             isNewSentence = false;
             getCurrentInputConnection().commitText(word, 1);
             getPredictions();
@@ -537,7 +539,6 @@ public class InputService extends InputMethodService implements
 
     private void deleteLastChar(){
         if (cursorPosition > 0) {
-            cursorPosition--;
             int charToDelete = 1;
             InputConnection ic = getCurrentInputConnection();
             if (!currentWordIsDone && currentWord.length() > 0) {
