@@ -8,8 +8,8 @@ android {
         applicationId "com.maxirozay.keymax"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 4
-        versionName "1.1.1"
+        versionCode 5
+        versionName "1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
