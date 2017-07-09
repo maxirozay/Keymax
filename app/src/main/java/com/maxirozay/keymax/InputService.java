@@ -245,6 +245,7 @@ public class InputService extends InputMethodService implements
         isNewSentence = true;
         currentWordIsDone = true;
         if (autoUpperCase) enableShift(true);
+        getCurrentInputConnection().finishComposingText();
         getPredictions();
     }
 
@@ -259,14 +260,8 @@ public class InputService extends InputMethodService implements
         InputConnection ic = getCurrentInputConnection();
         if (currentWordIsDone) ic.finishComposingText();
         else {
-            int followingCharCount = 0;
-            if (!ic.getTextAfterCursor(1, InputConnection.
-                    GET_TEXT_WITH_STYLES).toString().equals(" ")) {
-                followingCharCount = ic.getTextAfterCursor(30, InputConnection.
-                        GET_TEXT_WITH_STYLES).toString().split("\\s+")[0].length();
-            }
             ic.setComposingRegion(cursorPosition - currentWord.length(),
-                    cursorPosition + followingCharCount);
+                    cursorPosition);
         }
     }
 
