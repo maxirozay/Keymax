@@ -198,7 +198,8 @@ public class InputService extends InputMethodService implements
         super.onUpdateSelection(oldSelStart, oldSelEnd,
                 newSelStart, newSelEnd,
                 candidatesStart, candidatesEnd);
-        if (newSelStart != oldSelStart && oldSelStart == cursorPosition) {
+        if (newSelStart != oldSelStart && oldSelStart == cursorPosition
+                || newSelStart != newSelEnd || oldSelStart != oldSelEnd) {
             cursorPosition = newSelStart;
             updateSelection();
         }
@@ -518,7 +519,7 @@ public class InputService extends InputMethodService implements
         if (keyboard.isShifted()) string = string.toUpperCase();
         currentWord += string;
         cursorPosition += string.length();
-        getCurrentInputConnection().setComposingText(currentWord, cursorPosition);
+        getCurrentInputConnection().setComposingText(currentWord, 1);
         getPredictions();
     }
 
@@ -537,18 +538,23 @@ public class InputService extends InputMethodService implements
         }
     }
 
-    private void deleteLastChar(){
-        if (cursorPosition > 0) {
-            cursorPosition--;
-            int charToDelete = 1;
-            InputConnection ic = getCurrentInputConnection();
-            if (!currentWordIsDone && currentWord.length() > 0) {
-                char lastChar = currentWord.charAt(currentWord.length() - 1);
-                if ((int) lastChar > 0xD83D) charToDelete = 2;  //0xD83D and up is for emoji
-                ic.finishComposingText();
-                currentWord = currentWord.substring(0, currentWord.length() - charToDelete);
+    private void deleteLastChar() {
+        InputConnection ic = getCurrentInputConnection();
+        if (ic.getSelectedText(0) == null) {
+            if (cursorPosition > 0) {
+                cursorPosition--;
+                int charToDelete = 1;
+                if (!currentWordIsDone && currentWord.length() > 0) {
+                    char lastChar = currentWord.charAt(currentWord.length() - 1);
+                    if ((int) lastChar > 0xD83D) charToDelete = 2;  //0xD83D and up is for emoji
+                    ic.finishComposingText();
+                    currentWord = currentWord.substring(0, currentWord.length() - charToDelete);
+                }
+                ic.deleteSurroundingText(charToDelete, 0);
+                updateSelection();
             }
-            ic.deleteSurroundingText(charToDelete, 0);
+        } else {
+            ic.commitText("", 1);
             updateSelection();
         }
     }
