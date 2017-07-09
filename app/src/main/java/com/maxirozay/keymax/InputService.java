@@ -136,7 +136,7 @@ public class InputService extends InputMethodService implements
             inputView.getKeyboardView().setKeyboard(keyboard);
             if (dictionaryManager != null) {
                 initCursorPosition();
-                initPredictions();
+                updateSelection();
             }
         }
     }
@@ -153,7 +153,7 @@ public class InputService extends InputMethodService implements
         inputView.getRecentEmojis().addAll(Arrays
                 .asList(preferences.getString(RECENT_EMOJIS, "").split(",")));
         initCursorPosition();
-        initPredictions();
+        updateSelection();
     }
 
     @Override
@@ -200,7 +200,7 @@ public class InputService extends InputMethodService implements
                 candidatesStart, candidatesEnd);
         if (newSelStart != oldSelStart && oldSelStart == cursorPosition) {
             cursorPosition = newSelStart;
-            initPredictions();
+            updateSelection();
         }
     }
 
@@ -213,8 +213,7 @@ public class InputService extends InputMethodService implements
         cursorPosition = extractedText.selectionStart;
     }
 
-    private void initPredictions() {
-        if (!(inputType == ALPHABETIC_KEYBOARD && isPredictable)) return;
+    private void updateSelection() {
         lastPredictions.clear();
         lastWord = "";
         currentWord = "";
@@ -435,7 +434,7 @@ public class InputService extends InputMethodService implements
                             (dialog, which) -> {
                                 dictionaryManager.removeWord(word);
                                 dialog.dismiss();
-                                initPredictions();
+                                updateSelection();
                             },
                             (dialog, which) -> dialog.dismiss(),
                             inputView.getWindowToken());
@@ -479,7 +478,7 @@ public class InputService extends InputMethodService implements
                 inputView.getKeyboardView().setKeyboard(keyboard);
                 inputView.showKeyboard();
         }
-        initPredictions();
+        updateSelection();
     }
 
     private void enableShift(boolean value){
@@ -549,7 +548,7 @@ public class InputService extends InputMethodService implements
                 currentWord = currentWord.substring(0, currentWord.length() - charToDelete);
             }
             ic.deleteSurroundingText(charToDelete, 0);
-            initPredictions();
+            updateSelection();
         }
     }
 
