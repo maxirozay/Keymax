@@ -539,6 +539,7 @@ public class InputService extends InputMethodService implements
 
     private void deleteLastChar(){
         if (cursorPosition > 0) {
+            cursorPosition--;
             int charToDelete = 1;
             InputConnection ic = getCurrentInputConnection();
             if (!currentWordIsDone && currentWord.length() > 0) {
