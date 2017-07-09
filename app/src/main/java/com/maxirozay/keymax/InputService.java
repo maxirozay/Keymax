@@ -333,12 +333,12 @@ public class InputService extends InputMethodService implements
         InputConnection ic = getCurrentInputConnection();
         switch(primaryCode) {
             case SPACE_PRIMARY_CODE:
-                currentWordIsDone = true;
                 if (inputType == ALPHABETIC_KEYBOARD && isPredictable && autoCorrect) {
                     if (addPredictionToDictionary[0]) addToDictionary(predictions[0]);
                     writeWord(predictions[0]);
                 } else {
                     ic.finishComposingText();
+                    currentWordIsDone = true;
                     cursorPosition++;
                     ic.commitText(" ", 1);
                     getPredictions();
@@ -497,7 +497,7 @@ public class InputService extends InputMethodService implements
     public void writeWord(String word) {
         if (!isPredictable) addString(word);
         else {
-            lastWord = currentWord;
+            if (currentWordIsDone) lastWord = currentWord;
             currentWordIsDone = true;
             cursorPosition -= currentWord.length();
             currentWord = word.substring(0, word.length() - 1);
@@ -532,7 +532,7 @@ public class InputService extends InputMethodService implements
 
     private void addFollowingWord() {
         if (!isPredictable) return;
-        if (!isNewSentence && !StringUtil.isEndOfSentence(lastWord)) {
+        if (!StringUtil.isEndOfSentence(lastWord)) {
             dictionaryManager.addFollowingWord(lastWord, currentWord);
         }
     }

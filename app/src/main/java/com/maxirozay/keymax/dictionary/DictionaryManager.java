@@ -523,7 +523,8 @@ public class DictionaryManager {
     }
 
     public List<Node> getFollowingWords(String word) {
-        Node node = realm.where(Node.class).equalTo("lowercase", word.toLowerCase()).findFirst();
+        Node node = realm.where(Node.class)
+                .equalTo("lowercase", word.toLowerCase()).findFirst();
         if (node == null || node.getFollowingWords().size() == 0) node = getRoot(realm);
         else {
             realm.beginTransaction();
@@ -559,14 +560,16 @@ public class DictionaryManager {
         realm.executeTransactionAsync(realm -> {
             String wordEdited = StringUtil.stripEncapsulatingPunctuation(word);
             String followingEdited = StringUtil.stripEncapsulatingPunctuation(following);
-            if (!isWordValid(wordEdited) || !isWordValid(followingEdited)) return;
-            Node wordNode = realm.where(Node.class)
-                    .equalTo("lowercase", wordEdited.toLowerCase()).findFirst();
-            if (wordNode == null) return;
-            Node followingNode = realm.where(Node.class)
-                    .equalTo("lowercase", followingEdited.toLowerCase()).findFirst();
-            if (followingNode == null) return;
-            wordNode.addFollowingWord(followingNode);
+            if ((wordEdited.isEmpty() || isWordValid(wordEdited))
+                    && isWordValid(followingEdited)) {
+                Node wordNode = realm.where(Node.class)
+                        .equalTo("lowercase", wordEdited.toLowerCase()).findFirst();
+                if (wordNode == null) return;
+                Node followingNode = realm.where(Node.class)
+                        .equalTo("lowercase", followingEdited.toLowerCase()).findFirst();
+                if (followingNode == null) return;
+                wordNode.addFollowingWord(followingNode);
+            }
         });
     }
 
