@@ -219,10 +219,10 @@ public class InputService extends InputMethodService implements
     }
 
     private void updateSelection() {
+        currentWord = "";
         if (isPredictable) {
             lastPredictions.clear();
             lastWord = "";
-            currentWord = "";
             InputConnection ic = getCurrentInputConnection();
             if (ic == null) return;
             if (cursorPosition == 0) startNewSentence();
@@ -497,8 +497,7 @@ public class InputService extends InputMethodService implements
     }
 
     public void writeWord(String word) {
-        if (!isPredictable) addString(word);
-        else {
+        if (isPredictable) {
             if (currentWordIsDone) lastWord = currentWord;
             currentWordIsDone = true;
             cursorPosition -= currentWord.length();
@@ -508,20 +507,24 @@ public class InputService extends InputMethodService implements
             getCurrentInputConnection().commitText(word, 1);
             getPredictions();
             addFollowingWord();
-        }
+        } else addString(word);
     }
 
     public void addString(String string) {
-        if (currentWordIsDone) {
-            lastWord = currentWord;
-            currentWord = "";
+        if (isPredictable) {
+            if (currentWordIsDone) {
+                lastWord = currentWord;
+                currentWord = "";
+            }
+            currentWordIsDone = false;
+            if (keyboard.isShifted()) string = string.toUpperCase();
+            currentWord += string;
+            cursorPosition += string.length();
+            getCurrentInputConnection().setComposingText(currentWord, 1);
+            getPredictions();
+        } else {
+            getCurrentInputConnection().commitText(string, 1);
         }
-        currentWordIsDone = false;
-        if (keyboard.isShifted()) string = string.toUpperCase();
-        currentWord += string;
-        cursorPosition += string.length();
-        getCurrentInputConnection().setComposingText(currentWord, 1);
-        getPredictions();
     }
 
     public void addToDictionary(String word) {
