@@ -219,25 +219,27 @@ public class InputService extends InputMethodService implements
     }
 
     private void updateSelection() {
-        lastPredictions.clear();
-        lastWord = "";
-        currentWord = "";
-        InputConnection ic = getCurrentInputConnection();
-        if (ic == null) return;
-        if (cursorPosition == 0) startNewSentence();
-        else {
-            CharSequence lastCharacters = ic.getTextBeforeCursor(100,
-                    InputConnection.GET_TEXT_WITH_STYLES);
-            if (lastCharacters == null || lastCharacters.length() == 0) {
-                startNewSentence();
-            } else {
-                char lastCharacter = lastCharacters.charAt(lastCharacters.length() - 1);
-                currentWordIsDone = lastCharacter == ' ' || lastCharacter == '\n';
-                updateCurrentWord(lastCharacters.toString());
-                setComposingRegion();
-                if (isNewSentence && autoUpperCase && currentWordIsDone) enableShift(true);
-                getPredictions();
-             }
+        if (isPredictable) {
+            lastPredictions.clear();
+            lastWord = "";
+            currentWord = "";
+            InputConnection ic = getCurrentInputConnection();
+            if (ic == null) return;
+            if (cursorPosition == 0) startNewSentence();
+            else {
+                CharSequence lastCharacters = ic.getTextBeforeCursor(100,
+                        InputConnection.GET_TEXT_WITH_STYLES);
+                if (lastCharacters == null || lastCharacters.length() == 0) {
+                    startNewSentence();
+                } else {
+                    char lastCharacter = lastCharacters.charAt(lastCharacters.length() - 1);
+                    currentWordIsDone = lastCharacter == ' ' || lastCharacter == '\n';
+                    updateCurrentWord(lastCharacters.toString());
+                    setComposingRegion();
+                    if (isNewSentence && autoUpperCase && currentWordIsDone) enableShift(true);
+                    getPredictions();
+                 }
+            }
         }
     }
 
