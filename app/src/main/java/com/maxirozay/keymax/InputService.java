@@ -498,7 +498,10 @@ public class InputService extends InputMethodService implements
 
     public void writeWord(String word) {
         if (isPredictable) {
-            if (currentWordIsDone) lastWord = currentWord;
+            if (currentWordIsDone) {
+                lastWord = currentWord;
+                currentWord = "";
+            }
             currentWordIsDone = true;
             cursorPosition -= currentWord.length();
             currentWord = word.substring(0, word.length() - 1);
