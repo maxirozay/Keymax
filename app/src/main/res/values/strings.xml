@@ -35,6 +35,7 @@
     <string name="title_it">Italiano</string>
     <string name="title_pt_BR">Português (Brazil)</string>
     <string name="summary_language">Add this language to the dictionary.</string>
+    <string name="key_check_settings">checkSettings</string>
     <string name="key_english">en_US</string>
     <string name="key_french">fr</string>
     <string name="key_spanish">es</string>

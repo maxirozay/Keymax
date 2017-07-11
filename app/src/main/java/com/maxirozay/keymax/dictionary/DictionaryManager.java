@@ -127,21 +127,26 @@ public class DictionaryManager {
     }
 
     public void init() {
-        checkKeyboardLayout();
-        if (preferences.getBoolean(context.getString(R.string.key_reset_data), false)) {
-            resetDatabase();
-            preferences.edit().putBoolean(context.getString(R.string.key_reset_data), false).apply();
+        if (preferences.getBoolean(context.getString(R.string.key_check_settings), true)) {
+            checkKeyboardLayout();
+            if (preferences.getBoolean(context.getString(R.string.key_reset_data), false)) {
+                resetDatabase();
+                preferences.edit()
+                        .putBoolean(context.getString(R.string.key_reset_data), false).apply();
+            }
+            if (getRoot(realm) == null) {
+                realm.executeTransaction(realm -> {
+                    Node root = createNode(realm, "", 0, "");
+                    String[] followingWords = {"I", "do", "can"};
+                    root.setFollowingWords(getFollowingWords(realm,
+                            followingWords,
+                            context.getString(R.string.key_english)));
+                });
+            }
+            checkLanguages();
         }
-        if (getRoot(realm) == null) {
-            realm.executeTransaction(realm -> {
-                Node root = createNode(realm, "", 0, "");
-                String[] followingWords = {"I", "do", "can"};
-                root.setFollowingWords(getFollowingWords(realm,
-                        followingWords,
-                        context.getString(R.string.key_english)));
-            });
-        }
-        checkLanguages();
+        preferences.edit()
+                .putBoolean(context.getString(R.string.key_check_settings), false).apply();
     }
 
     public void close() {

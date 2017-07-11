@@ -9,13 +9,10 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
-
-import com.maxirozay.keymax.AppCompatPreferenceActivity;
-import com.maxirozay.keymax.R;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -96,6 +93,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
                 .replace(android.R.id.content, new GeneralPreferenceFragment())
                 .commit();
         setupActionBar();
+        PreferenceManager.getDefaultSharedPreferences(this).edit()
+                .putBoolean(getString(R.string.key_check_settings), true).apply();
     }
 
     @Override
