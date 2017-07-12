@@ -127,8 +127,8 @@ public class DictionaryManager {
     }
 
     public void init() {
+        checkKeyboardLayout();
         if (preferences.getBoolean(context.getString(R.string.key_check_settings), true)) {
-            checkKeyboardLayout();
             if (preferences.getBoolean(context.getString(R.string.key_reset_data), false)) {
                 resetDatabase();
                 preferences.edit()
