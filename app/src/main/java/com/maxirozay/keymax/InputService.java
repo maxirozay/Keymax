@@ -489,7 +489,7 @@ public class InputService extends InputMethodService implements
 
         // Invalidate all alphabetic keys
         int offset = 0;
-        if (inputView.getKeyboardView().getKeyboard().getKeys().size() > 40) offset = -10;
+        if (inputView.getKeyboardView().getKeyboard().getKeys().size() < 40) offset = -10;
         for (int i = 15 + offset; i < 43 + offset; i++) {
             inputView.getKeyboardView().invalidateKey(i);
         }
