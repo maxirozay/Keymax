@@ -488,12 +488,13 @@ public class InputService extends InputMethodService implements
         keyboard.setShifted(value);
 
         // Invalidate all alphabetic keys
-        int offset = 0;
-        if (inputView.getKeyboardView().getKeyboard().getKeys().size() < 40) offset = -10;
-        for (int i = 15 + offset; i < 43 + offset; i++) {
-            inputView.getKeyboardView().invalidateKey(i);
-        }
-        invalidatePredication();
+        int offset = inputView.getKeyboardView().getKeyboard().getKeys().size() > 40 ? 0 : -10;
+        try {
+            for (int i = 15 + offset; i < 43 + offset; i++) {
+                inputView.getKeyboardView().invalidateKey(i);
+            }
+            invalidatePredication();
+        } catch (StringIndexOutOfBoundsException e) {}
     }
 
     public void writeWord(String word) {
