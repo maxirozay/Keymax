@@ -5,7 +5,7 @@
         android:title="@string/title_rate">
         <intent
             android:name="android.intent.action.VIEW"
-            android:data="market://details?id=maxirozay.com.keymax"/>
+            android:data="@string/store_link"/>
     </Preference>
     <Preference
         android:title="@string/title_share"
