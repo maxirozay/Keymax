@@ -12,6 +12,7 @@
 
     <string name="title_rate">Rate This Keyboard</string>
     <string name="title_share">Share This Keyboard</string>
+    <string name="app_link">https://play.google.com/store/apps/details?id=com.maxirozay.keymax</string>
     <string name="title_tips">Tips</string>
     <string name="tips">- Swipe left to change the keyboard or right to change the language
         after having selected some other languages in the settings.

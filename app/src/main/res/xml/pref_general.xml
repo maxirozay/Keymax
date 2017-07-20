@@ -14,7 +14,7 @@
         <intent
             android:name="android.intent.action.SEND"
             android:mimeType="text/plain"
-            android:data="https://play.google.com/store/apps/details?id=maxirozay.com.keymax"/>
+            android:data="@string/app_link"/>
     </Preference>
     <PreferenceScreen
         android:icon="@drawable/ic_info_24dp"
