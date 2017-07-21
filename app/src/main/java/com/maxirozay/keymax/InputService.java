@@ -515,13 +515,13 @@ public class InputService extends InputMethodService implements
     }
 
     public void addString(String string) {
+        if (keyboard.isShifted()) string = string.toUpperCase();
         if (isPredictable) {
             if (currentWordIsDone) {
                 lastWord = currentWord;
                 currentWord = "";
             }
             currentWordIsDone = false;
-            if (keyboard.isShifted()) string = string.toUpperCase();
             currentWord += string;
             cursorPosition += string.length();
             getCurrentInputConnection().setComposingText(currentWord, 1);
