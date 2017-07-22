@@ -119,17 +119,22 @@ public class InputService extends InputMethodService implements
                     case InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS:
                         isPredictable = true;
                         autoUpperCase = false;
+                        predictions[0] = " ";
+                        predictions[1] = " ";
+                        predictions[2] = " ";
+                        predictions[3] = " ";
                         break;
                     default:
                         autoUpperCase = true;
                         isPredictable = true;
+                        predictions[0] = " ";
+                        predictions[1] = " ";
+                        predictions[2] = " ";
+                        predictions[3] = " ";
                 }
                 inputType = ALPHABETIC_KEYBOARD;
                 keyboard = getAlphaNumericKeyboard();
                 initKeysId();
-                for (int i = 0; i < PREDICTION_KEYS.length; i++) {
-                    keyboard.getKeys().get(PREDICTION_KEYS[i]).label = predictions[i];
-                }
         }
         if (inputView != null) {
             inputView.showKeyboard();
@@ -181,13 +186,22 @@ public class InputService extends InputMethodService implements
         if (getResources().getConfiguration().orientation ==
                 Configuration.ORIENTATION_PORTRAIT) {
             if (autoCorrect) PREDICTION_KEYS = new int[] {47, 3, 1, 2};
-            else PREDICTION_KEYS = new int[] {2, 3, 1};
+            else {
+                PREDICTION_KEYS = new int[] {2, 3, 1};
+                keyboard.getKeys().get(47).label = " ";
+            }
             shiftKey = 35;
         }
         else {
             if (autoCorrect) PREDICTION_KEYS = new int[] {37, 3, 1, 2};
-            else PREDICTION_KEYS = new int[] {2, 3, 1};
+            else {
+                PREDICTION_KEYS = new int[] {2, 3, 1};
+                keyboard.getKeys().get(37).label = " ";
+            }
             shiftKey = 25;
+        }
+        for (int i = 0; i < PREDICTION_KEYS.length; i++) {
+            keyboard.getKeys().get(PREDICTION_KEYS[i]).label = predictions[i];
         }
     }
 
@@ -340,6 +354,7 @@ public class InputService extends InputMethodService implements
                     currentWordIsDone = true;
                     cursorPosition++;
                     ic.commitText(" ", 1);
+                    checkIfIsNewSentence();
                     getPredictions();
                 }
                 break;
