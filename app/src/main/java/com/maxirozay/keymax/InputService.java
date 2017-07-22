@@ -233,6 +233,7 @@ public class InputService extends InputMethodService implements
     }
 
     private void updateSelection() {
+        if (inputType == NUMBERIC) return;
         currentWord = "";
         if (isPredictable) {
             lastPredictions.clear();
