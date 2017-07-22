@@ -255,7 +255,7 @@ public class InputService extends InputMethodService implements
         String[] lastWords = lastCharacters.split("\\s+");
         lastWord = lastWords.length > 1 ? lastWords[lastWords.length - 2] : "";
         currentWord = lastWords.length > 0 ? lastWords[lastWords.length - 1] : "";
-        checkIfIsNewSentence(lastWords);
+        checkIfIsNewSentence();
     }
 
     private void setComposingRegion() {
@@ -267,15 +267,12 @@ public class InputService extends InputMethodService implements
         }
     }
 
-    private void checkIfIsNewSentence(String[] lastWords) {
-        if (lastWords.length == 0) {
+    private void checkIfIsNewSentence() {
+        if (!currentWordIsDone && (lastWord.isEmpty() || StringUtil.isEndOfSentence(lastWord))
+                || currentWordIsDone && StringUtil.isEndOfSentence(currentWord)) {
+            if (currentWordIsDone && autoUpperCase) enableShift(true);
             isNewSentence = true;
-        } else if (currentWordIsDone && StringUtil
-                .isEndOfSentence(lastWords[lastWords.length - 1])) {
-            isNewSentence = true;
-        } else if (lastWords.length > 1) {
-            isNewSentence = StringUtil.isEndOfSentence(lastWords[lastWords.length - 2]);
-        } else isNewSentence = !currentWordIsDone;
+        } else isNewSentence = false;
     }
 
     private void getPredictions() {
@@ -401,7 +398,6 @@ public class InputService extends InputMethodService implements
                 String text = String.valueOf((char) primaryCode);
                 addString(text);
         }
-        if (!capsLocked) enableShift(false);
     }
 
     @Override
@@ -507,8 +503,9 @@ public class InputService extends InputMethodService implements
             cursorPosition -= currentWord.length();
             currentWord = word.substring(0, word.length() - 1);
             cursorPosition += word.length();
-            isNewSentence = false;
             getCurrentInputConnection().commitText(word, 1);
+            if (!capsLocked) enableShift(false);
+            checkIfIsNewSentence();
             getPredictions();
             addFollowingWord();
         } else addString(word);
@@ -525,6 +522,8 @@ public class InputService extends InputMethodService implements
             currentWord += string;
             cursorPosition += string.length();
             getCurrentInputConnection().setComposingText(currentWord, 1);
+            if (!capsLocked) enableShift(false);
+            checkIfIsNewSentence();
             getPredictions();
         } else {
             getCurrentInputConnection().commitText(string, 1);
@@ -547,6 +546,7 @@ public class InputService extends InputMethodService implements
     }
 
     private void deleteLastChar() {
+        if (!capsLocked) enableShift(false);
         InputConnection ic = getCurrentInputConnection();
         if (ic.getSelectedText(0) == null) {
             if (cursorPosition > 0) {
