@@ -131,22 +131,11 @@ public class DictionaryManager {
         if (preferences.getBoolean(context.getString(R.string.key_check_settings), true)) {
             if (preferences.getBoolean(context.getString(R.string.key_reset_data), false)) {
                 resetDatabase();
-                preferences.edit()
-                        .putBoolean(context.getString(R.string.key_reset_data), false).apply();
-            }
-            if (getRoot(realm) == null) {
-                realm.executeTransaction(realm -> {
-                    Node root = createNode(realm, "", 0, "");
-                    String[] followingWords = {"I", "do", "can"};
-                    root.setFollowingWords(getFollowingWords(realm,
-                            followingWords,
-                            context.getString(R.string.key_english)));
-                });
+                preferences.edit().clear().apply();
             }
             checkLanguages();
         }
-        preferences.edit()
-                .putBoolean(context.getString(R.string.key_check_settings), false).apply();
+        preferences.edit().putBoolean(context.getString(R.string.key_check_settings), false).apply();
     }
 
     public void close() {
@@ -315,13 +304,13 @@ public class DictionaryManager {
         String lowercase = word.toLowerCase();
         Node node = realm.where(Node.class).equalTo("lowercase", lowercase).findFirst();
         if (node != null) {
-            if (freq > 0) {
+            if (freq > node.getFreq()) {
                 node.setFreq(freq);
-                node.setWord(true);
-                node.setSimpleWord(StringUtil.cleanWord(lowercase));
                 node.setWord(word);
+                if (followingWords != null) node.setFollowingWords(followingWords);
             }
-            if (followingWords != null) node.setFollowingWords(followingWords);
+            if (!node.isWord()) node.setWord(word);
+            node.setWord(true);
             return node;
         }
         return populateTree(realm,
@@ -333,7 +322,17 @@ public class DictionaryManager {
     }
 
     private Node getRoot(Realm realm) {
-        return realm.where(Node.class).equalTo("lowercase", "").findFirst();
+        Node root = realm.where(Node.class).equalTo("lowercase", "").findFirst();
+        if (root == null) {
+            realm.beginTransaction();
+                root = createNode(realm, "", 0, "");
+                String[] followingWords = {"I", "do", "can"};
+                root.setFollowingWords(getFollowingWords(realm,
+                        followingWords,
+                        context.getString(R.string.key_english)));
+            realm.commitTransaction();
+        }
+        return root;
     }
 
     private Node findPrefix(Realm realm, String lowercase) {
@@ -389,7 +388,6 @@ public class DictionaryManager {
                     if (!suffix.isWord()) {
                         suffix.setWord(true);
                         suffix.setWord(word);
-                        suffix.setSimpleWord(StringUtil.cleanWord(lowercase));
                         suffix.setFreq(Math.max(freq, suffix.getFreq()));
                         suffix.setFollowingWords(followingWords);
                         if (!suffix.getLanguage().contains(language)) {
