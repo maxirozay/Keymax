@@ -561,12 +561,11 @@ public class DictionaryManager {
 
     public void addFollowingWord(final String word, final String following) {
         realm.executeTransactionAsync(realm -> {
-            String wordEdited = StringUtil.stripEncapsulatingPunctuation(word);
             String followingEdited = StringUtil.stripEncapsulatingPunctuation(following);
-            if ((wordEdited.isEmpty() || isWordValid(wordEdited))
+            if ((word.isEmpty() || isWordValid(word))
                     && isWordValid(followingEdited)) {
                 Node wordNode = realm.where(Node.class)
-                        .equalTo("lowercase", wordEdited.toLowerCase()).findFirst();
+                        .equalTo("lowercase", word.toLowerCase()).findFirst();
                 if (wordNode == null) return;
                 Node followingNode = realm.where(Node.class)
                         .equalTo("lowercase", followingEdited.toLowerCase()).findFirst();

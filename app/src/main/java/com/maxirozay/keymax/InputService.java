@@ -557,9 +557,8 @@ public class InputService extends InputMethodService implements
 
     private void addFollowingWord() {
         if (!isPredictable) return;
-        if (!StringUtil.isEndOfSentence(lastWord)) {
-            dictionaryManager.addFollowingWord(lastWord, currentWord);
-        }
+        if (isNewSentence) dictionaryManager.addFollowingWord("", currentWord);
+        else dictionaryManager.addFollowingWord(lastWord, currentWord);
     }
 
     private void deleteLastChar() {
