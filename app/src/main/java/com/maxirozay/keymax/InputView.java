@@ -167,7 +167,7 @@ public class InputView extends LinearLayout {
     protected void addEmoji(String emoji) {
         int index = recentEmojis.indexOf(emoji);
         if (index > 0) recentEmojis.remove(index);
-        recentEmojis.add(0, emoji);
+        if (index != 0) recentEmojis.add(0, emoji);
     }
 
     protected void updateRecentEmojis() {
