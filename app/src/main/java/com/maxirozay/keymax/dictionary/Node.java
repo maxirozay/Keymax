@@ -51,6 +51,7 @@ public class Node extends RealmObject {
     }
 
     public void addFollowingWord(Node word) {
+        if (getFollowingWords().size() > 5) getFollowingWords().remove(5);
         int index = getFollowingWords().indexOf(word);
         if (index > 0) getFollowingWords().move(index, index - 1);
         else if (index == -1) getFollowingWords().add(word);
