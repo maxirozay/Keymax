@@ -397,13 +397,12 @@ public class DictionaryManager {
                     }
                     return suffix;
                 }
-                Node newWord = createWord(realm,
+                return createWord(realm,
                         lowercase,
                         word,
                         freq,
                         followingWords,
                         language);
-                return newWord;
             }
         }
         Node newNode = createWord(realm,
