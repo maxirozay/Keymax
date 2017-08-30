@@ -459,51 +459,39 @@ public class DictionaryManager {
         return perfectMatches;
     }
 
-    private int searchInTree(String query,
+    private void searchInTree(String query,
                              Node node,
                              int errorCount,
                              int depth,
                              List<Node> perfectMatches,
                              List<Node> matches,
                              List<Node> corrections) {
-        int matchCount = 0;
         String editedQuery = query;
-        for (int i = depth; i < node.getLowercase().length(); i++) {
+        for (int i = depth; i < node.getSimpleWord().length(); i++) {
             if (i >= editedQuery.length()) break;
-            if (editedQuery.charAt(i) != node.getLowercase().charAt(i)) {
-                if ("'-.".contains(node.getLowercase().substring(i, i + 1))) {
-                    editedQuery = query.substring(0, i)
-                            + node.getLowercase().charAt(i)
-                            + query.substring(i);
-                } else if (node.getSimpleWord().length() > i
-                        && editedQuery.charAt(i) == node.getSimpleWord().charAt(i)) {
-                    editedQuery = query.substring(0, i)
-                            + node.getLowercase().charAt(i);
-                    if (query.length() > i + 1) {
-                        editedQuery += query.substring(i + 1);
-                    }
-                } else if (letterNeighbor.containsKey(editedQuery.charAt(i))
+            if (editedQuery.charAt(i) != node.getSimpleWord().charAt(i)
+                    && editedQuery.charAt(i) != node.getLowercase().charAt(i)) {
+                if (letterNeighbor.containsKey(editedQuery.charAt(i))
                         && letterNeighbor.get(editedQuery.charAt(i))
                         .contains(node.getLowercase().substring(i, i + 1))) {
-                    if (++errorCount > 1 || perfectMatches.size() > 2) return 0;
+                    if (++errorCount > 1 || perfectMatches.size() > 2) return;
                     editedQuery = query.substring(0, i)
                             + node.getLowercase().charAt(i);
                     if (query.length() > i + 1) {
                         editedQuery += query.substring(i + 1);
                     }
-                } else return 0;
+                } else return;
             }
         }
-        if (node.getLowercase().length() < editedQuery.length()){
+        if (node.getSimpleWord().length() < editedQuery.length()) {
             for (Node suffix : node.getSuffixes()) {
-                matchCount += searchInTree(editedQuery,
+                searchInTree(editedQuery,
                         suffix,
                         errorCount,
-                        node.getLowercase().length(),
+                        node.getSimpleWord().length(),
                         perfectMatches,
                         matches,
                         corrections);
-                if (matchCount > 2) return matchCount;
             }
         } else {
             if (errorCount == 0) {
@@ -513,15 +501,12 @@ public class DictionaryManager {
                     } else matches.add(node);
                 }
                 else matches.addAll(node.getSuffixes());
-                return 1;
             }
             else {
                 if (node.isWord()) corrections.add(node);
                 else corrections.addAll(node.getSuffixes());
-                return 0;
             }
         }
-        return 0;
     }
 
     public List<Node> getFollowingWords(String word) {
