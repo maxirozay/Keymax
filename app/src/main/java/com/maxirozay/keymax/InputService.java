@@ -165,11 +165,14 @@ public class InputService extends InputMethodService implements
     @Override
     public void onWindowHidden() {
         super.onWindowHidden();
-        SharedPreferences.Editor preferences = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        String emojis = "";
-        for (String emoji : inputView.getRecentEmojis()) emojis += emoji + ",";
-        preferences.putString(RECENT_EMOJIS, emojis);
-        preferences.apply();
+        StringBuilder emojis = new StringBuilder();
+        for (String emoji : inputView.getRecentEmojis()) emojis.append(emoji + ",");
+        if (emojis.length() > 0) {
+            SharedPreferences.Editor preferences = PreferenceManager
+                    .getDefaultSharedPreferences(this).edit();
+            preferences.putString(RECENT_EMOJIS, emojis.toString());
+            preferences.apply();
+        }
         currentWord = null;
         dictionaryManager.close();
         dictionaryManager = null;
