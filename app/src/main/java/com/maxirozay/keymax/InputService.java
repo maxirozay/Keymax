@@ -542,12 +542,12 @@ public class InputService extends InputMethodService implements
             currentWord += string;
             cursorPosition += string.length();
             getCurrentInputConnection().setComposingText(currentWord, 1);
-            if (!capsLocked) enableShift(false);
             checkIfIsNewSentence();
             getPredictions();
         } else {
             getCurrentInputConnection().commitText(string, 1);
         }
+        if (!capsLocked) enableShift(false);
     }
 
     public void addToDictionary(String word) {
