@@ -369,8 +369,8 @@ public class InputService extends InputMethodService implements
                 break;
             case PREDICTION2:
                 int predictionId = autoCorrect ? 3 : 0;
-                writeWord(predictions[predictionId]);
                 addToDictionary(predictions[predictionId]);
+                writeWord(predictions[predictionId]);
                 break;
             case PREDICTION3:
                 if (addPredictionToDictionary[1]) addToDictionary(predictions[1]);
