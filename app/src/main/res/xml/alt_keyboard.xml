@@ -1,7 +1,7 @@
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
           android:keyWidth="12.5%p"
-          android:keyHeight="8%p">
-    <Row android:keyHeight="7%p" android:rowEdgeFlags="top">
+          android:keyHeight="48dp">
+    <Row android:keyHeight="42dp" android:rowEdgeFlags="top">
         <Key android:codes="-105"
             android:keyIcon="@drawable/ic_keyboard_red_24dp"
             android:popupKeyboard="@xml/popup_keyboard"
@@ -58,7 +58,7 @@
         <Key android:codes="-5" android:keyIcon="@drawable/ic_keyboard_backspace_red_24dp"
              android:keyWidth="24%p" android:isRepeatable="true" android:keyEdgeFlags="right"/>
     </Row>
-    <Row android:rowEdgeFlags="bottom">
+    <Row android:rowEdgeFlags="bottom" android:keyHeight="42dp">
         <Key android:codes="-109" android:keyIcon="@drawable/ic_settings_red_24dp"
             android:keyEdgeFlags="left"/>
         <Key android:codes="91,93" android:keyLabel="[ ]"/>

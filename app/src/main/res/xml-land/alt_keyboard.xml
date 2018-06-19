@@ -1,6 +1,6 @@
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
           android:keyWidth="9%p"
-          android:keyHeight="12%p">
+          android:keyHeight="42dp">
     <Row android:rowEdgeFlags="top">
         <Key android:codes="-105"
             android:keyIcon="@drawable/ic_keyboard_red_24dp"
