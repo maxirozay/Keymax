@@ -341,6 +341,7 @@ public class InputService extends InputMethodService implements
     }
 
     private void invalidatePredication() {
+        if (!isPredictable) return;
         for (int id : PREDICTION_KEYS){
             inputView.getKeyboardView().invalidateKey(id);
         }
