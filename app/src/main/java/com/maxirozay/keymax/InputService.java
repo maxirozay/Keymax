@@ -7,7 +7,6 @@ import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.media.AudioManager;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
 import android.text.InputType;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
@@ -17,6 +16,7 @@ import android.view.inputmethod.ExtractedText;
 import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputConnection;
 import android.widget.Button;
+import androidx.core.content.ContextCompat;
 
 import com.maxirozay.keymax.dictionary.DictionaryManager;
 import com.maxirozay.keymax.dictionary.Node;
