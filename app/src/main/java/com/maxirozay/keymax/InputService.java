@@ -8,6 +8,7 @@ import android.inputmethodservice.Keyboard;
 import android.media.AudioManager;
 import android.preference.PreferenceManager;
 import android.text.InputType;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.View;
@@ -53,7 +54,8 @@ public class InputService extends InputMethodService implements
             NUMBERIC = 1,
             SPACE_PRIMARY_CODE = 32;
     private int inputType, cursorPosition, shiftKey = 35;
-    private String lastWord, currentWord;
+    private String lastWord = "",
+            currentWord = "";
     private int[] PREDICTION_KEYS;
     private String[] predictions = {" ", " ", " ", " "};
     private boolean[] addPredictionToDictionary = {false, false, false, true};
@@ -173,7 +175,7 @@ public class InputService extends InputMethodService implements
             preferences.putString(RECENT_EMOJIS, emojis.toString());
             preferences.apply();
         }
-        currentWord = null;
+        currentWord = "";
         dictionaryManager.close();
         dictionaryManager = null;
     }
@@ -237,8 +239,8 @@ public class InputService extends InputMethodService implements
     }
 
     private void updateSelection() {
-        if (inputType == NUMBERIC) return;
         currentWord = "";
+        if (inputType == NUMBERIC) return;
         if (isPredictable) {
             lastPredictions.clear();
             lastWord = "";
